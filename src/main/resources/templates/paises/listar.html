@@ -1,0 +1,119 @@
+<<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Listado Países</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+<body id="page-top">
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <!-- (Se mantiene igual que en el original) -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <!-- Topbar -->
+            <!-- (Se mantiene igual que en el original) -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="container mt-5">
+                        <h1>Países</h1>
+                        <a href="/paises/form" class="btn btn-primary mb-3">Nuevo País</a>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="pais : ${paises}">
+                                <td th:text="${pais.id_pais}">1</td>
+                                <td th:text="${pais.descripcion}">Paraguay</td>
+                                <td>
+                                    <a th:href="@{/paises/editar/{id}(id=${pais.id_pais})}" class="btn btn-warning btn-sm">Editar</a>
+                                    <button th:data-id="${pais.id_pais}" th:data-descripcion="${pais.descripcion}"
+                                            class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2021</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/resources/vendor/jquery/jquery.min.js"></script>
+<script src="/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/resources/js/sb-admin-2.min.js"></script>
+
+<!-- Eliminar país por AJAX -->
+<script>
+    $(document).ready(function () {
+        $('.btn-eliminar').click(function () {
+            const id = $(this).data('id');
+            const descripcion = $(this).data('descripcion');
+            if (confirm('¿Estás seguro de eliminar el país [' + descripcion + '] ?')) {
+                $.ajax({
+                    url: '/paises/eliminar',
+                    type: 'POST',
+                    data: {id: id},
+                    success: function (response) {
+                        alert("País eliminado con éxito!!");
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error al eliminar el país");
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
