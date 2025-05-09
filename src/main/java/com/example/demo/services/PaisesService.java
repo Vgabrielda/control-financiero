@@ -7,11 +7,10 @@ import com.example.demo.models.Paises; // Importa el modelo Pais
 
 public interface PaisesService {
 
-    List<Paises> getAllPaises(); // Renombra el método
+    List<Paises> getAllPaises(); 
 
-    Optional<Paises> getPaisById(Long id); // Renombra el método
+    Optional<Paises> getPaisById(Long id); 
 
-    void savePais(Paises paises); // Renombra el método y el parámetro
-
-    void deletePais(Long id); // Renombra el método
+    void savePais(Paises paises);
+    void deletePais(Long id); 
 }

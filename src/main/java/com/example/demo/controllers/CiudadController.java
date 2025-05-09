@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.models.Ciudad;
+import com.example.demo.models.Departamento; 
 import com.example.demo.services.CiudadService;
+import com.example.demo.services.DepartamentoService; 
 
 import lombok.AllArgsConstructor;
 
@@ -21,43 +24,49 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CiudadController {
 
-	private CiudadService ciudadService;
+    private CiudadService ciudadService;
+    private DepartamentoService departamentoService; 
 
-	@GetMapping
-	public String listar(Model model) {
-		model.addAttribute("ciudad", ciudadService.getAllCiudades());
-		return "ciudad/listar";
-	}
+    @GetMapping
+    public String listar(Model model) {
+        model.addAttribute("ciudad", ciudadService.getAlls());
+        return "ciudad/listar";
+    }
 
-	@GetMapping("/form")
-	public String mostrarFormulario(Model model) {
-		model.addAttribute("ciudad", new Ciudad());
-		return "ciudad/formulario";
-	}
+    @GetMapping("/form")
+    public String mostrarFormulario(Model model) {
+        model.addAttribute("ciudad", new Ciudad());
+        List<Departamento> departamentos = departamentoService.getAllDepartamentos(); 
+        model.addAttribute("departamento", departamentos); 
+        return "ciudad/formulario";
+    }
 
-	@PostMapping("/guardar")
-	public String guardar(@ModelAttribute Ciudad ciudad) {
-		ciudadService.saveCiudades(ciudad);
-		return "redirect:/ciudad";
-	}
+    @PostMapping("/guardar")
+    public String guardar(@ModelAttribute Ciudad ciudad) {
 
-	@GetMapping("/editar/{id}")
-	public String editar(@PathVariable Long id, Model model) {
+        ciudadService.save(ciudad);
+        return "redirect:/ciudad";
+    }
+    
 
-		Optional<Ciudad> ciudad = ciudadService.getCiudadById(id);
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        Optional<Ciudad> ciudadOptional = ciudadService.getById(id);
 
-		if (ciudad.isPresent()) {
-			model.addAttribute("ciudad", ciudad.get());
-			return "ciudad/formulario";
-		}
+        if (ciudadOptional.isPresent()) {
+            Ciudad ciudad = ciudadOptional.get();
+            model.addAttribute("ciudad", ciudad);
+            List<Departamento> departamentos = departamentoService.getAllDepartamentos(); 
+            model.addAttribute("departamento", departamentos); 
+            return "ciudad/formulario";
+        }
 
-		return "redirect:/ciudad";
-		
-	}
+        return "redirect:/ciudad";
+    }
 
-	@PostMapping("/eliminar")
-	public String eliminar(@RequestParam Long id) {
-		ciudadService.deleteCiudad(id);
-		return "redirect:/ciudad";
-	}
+    @PostMapping("/eliminar")
+    public String eliminar(@RequestParam Long id) {
+        ciudadService.delete(id);
+        return "redirect:/ciudad";
+    }
 }
